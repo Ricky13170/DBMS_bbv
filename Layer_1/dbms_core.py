@@ -1,4 +1,4 @@
-class ClientInterface:
+class StorageEngine:
     pass
 
 
@@ -6,23 +6,15 @@ class QueryProcessing:
     pass
 
 
-class DatabaseManagement:
-    pass
-
-
-class StorageEngine:
-    pass
-
-
 class TransactionConcurrency:
     pass
 
 
-class SecurityManagement:
+class Security:
     pass
 
 
-class BackupRecoveryLogging:
+class DatabaseObjectMetadata:
     pass
 
 
@@ -30,7 +22,7 @@ class Administration:
     pass
 
 
-class PerformanceManagement:
+class BackupRecoveryLogging:
     pass
 
 
@@ -39,14 +31,13 @@ class CommunicationConnectivity:
 
 
 class DBMS:
+    """Core System chứa (Composition) 8 Sub-systems gốc"""
     def __init__(self):
-        self.client_interface = ClientInterface()
-        self.query_processing = QueryProcessing()
-        self.database_management = DatabaseManagement()
         self.storage_engine = StorageEngine()
+        self.query_processing = QueryProcessing()
         self.transaction_concurrency = TransactionConcurrency()
-        self.security_management = SecurityManagement()
-        self.backup_recovery_logging = BackupRecoveryLogging()
+        self.security = Security()
+        self.database_metadata = DatabaseObjectMetadata()
         self.administration = Administration()
-        self.performance_management = PerformanceManagement()
-        self.communication_connectivity = CommunicationConnectivity()
+        self.backup_recovery = BackupRecoveryLogging()
+        self.communication = CommunicationConnectivity()
