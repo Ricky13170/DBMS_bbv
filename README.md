@@ -1,7 +1,7 @@
 # DBMS — Database Management System
 
 A modular, SOLID-compliant Database Management System designed with a top-down architecture approach.
-The system is decomposed into 8 core subsystems, each designed with clear interfaces, entities, and service classes following OOP best practices.
+The system is decomposed into 10 core subsystems, each designed with clear interfaces, entities, and service classes following OOP best practices.
 
 ---
 
@@ -9,13 +9,15 @@ The system is decomposed into 8 core subsystems, each designed with clear interf
 ```mermaid
 mindmap
   root((DBMS Core))
-    StorageEngine
+    ClientInterface
     QueryProcessing
+    DatabaseManagement
+    StorageEngine
     TransactionConcurrency
-    DatabaseObjectMetadata
-    Security
-    Administration
+    SecurityManagement
     BackupRecoveryLogging
+    Administration
+    PerformanceManagement
     CommunicationConnectivity
 ```
 
@@ -29,33 +31,33 @@ classDiagram
         <<Facade / Orchestrator>>
     }
 
-    DBMS *-- CommunicationConnectivity
+    DBMS *-- ClientInterface
     DBMS *-- QueryProcessing
-    DBMS *-- DatabaseObjectMetadata
+    DBMS *-- DatabaseManagement
     DBMS *-- StorageEngine
     DBMS *-- TransactionConcurrency
-    DBMS *-- Security
+    DBMS *-- SecurityManagement
     DBMS *-- Administration
     DBMS *-- BackupRecoveryLogging
+    DBMS *-- PerformanceManagement
+    DBMS *-- CommunicationConnectivity
     
-    %% Thiết lập sự phụ thuộc (Dependencies)
-    CommunicationConnectivity --> QueryProcessing : Gửi câu lệnh SQL
-    CommunicationConnectivity --> Security : Yêu cầu Authentication
-    
-    QueryProcessing --> DatabaseObjectMetadata : Đọc Catalog, Schema
-    QueryProcessing --> StorageEngine : Yêu cầu lấy/ghi dữ liệu
-    QueryProcessing --> TransactionConcurrency : Yêu cầu Lock, Context
-    QueryProcessing --> Security : Kiểm tra Authorization
-    
-    TransactionConcurrency --> StorageEngine : Khóa bản ghi/Page
-    TransactionConcurrency --> BackupRecoveryLogging : Ghi Log (WAL)
-    
-    BackupRecoveryLogging --> StorageEngine : Restore/Flush Pages
-    
-    Administration --> Security : Audit Log, Quản lý User
-    Administration --> BackupRecoveryLogging : Lên lịch Backup
-    Administration --> QueryProcessing : Lấy Profiling, Metrics
-    Administration --> StorageEngine : Chạy DBCC, Vacuum
+    ClientInterface --> QueryProcessing
+    QueryProcessing --> DatabaseManagement
+    QueryProcessing --> StorageEngine
+    QueryProcessing --> TransactionConcurrency
+    QueryProcessing --> SecurityManagement
+    DatabaseManagement --> SystemCatalog
+    DatabaseManagement --> StorageEngine
+    TransactionConcurrency --> StorageEngine
+    TransactionConcurrency --> BackupRecoveryLogging
+    BackupRecoveryLogging --> StorageEngine
+    PerformanceManagement --> QueryProcessing
+    PerformanceManagement --> StorageEngine
+    PerformanceManagement --> TransactionConcurrency
+    Administration --> SecurityManagement
+    Administration --> BackupRecoveryLogging
+    Administration --> PerformanceManagement
 
 ```
 
@@ -71,23 +73,3 @@ classDiagram
 | **Design Patterns** | Facade, Template Method, Strategy, Composite, Iterator used per module |
 
 ---
-
-## Project Structure
-
-```text
-DBMS/
-├── docs/
-│   ├── architecture/       ← Layer 1-4 design diagrams
-│   └── sequence_diagrams/  ← Key operation sequence diagrams
-├── src/                    ← Implementation source code
-└── tests/
-    ├── unit/
-    └── integration/
-```
-
----
-
-## Documentation
-
-- [Layer 3 Component Breakdown](docs/architecture/layer3_components.md)
-- [Storage Engine — File Manager (Detailed)](docs/04_class_detail_file_management.md)
