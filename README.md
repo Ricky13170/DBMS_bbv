@@ -6,6 +6,18 @@ The system is decomposed into 8 core subsystems, each designed with clear interf
 ---
 
 ## Architecture Overview
+```mermaid
+mindmap
+  root((DBMS Core))
+    StorageEngine
+    QueryProcessing
+    TransactionConcurrency
+    DatabaseObjectMetadata
+    Security
+    Administration
+    BackupRecoveryLogging
+    CommunicationConnectivity
+```
 
 ### Layer 1 — System Domains
 
