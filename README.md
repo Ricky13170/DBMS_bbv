@@ -1,7 +1,7 @@
 # DBMS — Database Management System
 
 A modular, SOLID-compliant Database Management System designed with a top-down architecture approach.
-The system is decomposed into 10 core subsystems, each designed with clear interfaces, entities, and service classes following OOP best practices.
+The system is decomposed into 8 core subsystems, each designed with clear interfaces, entities, and service classes following OOP best practices.
 
 ---
 
@@ -9,15 +9,13 @@ The system is decomposed into 10 core subsystems, each designed with clear inter
 ```mermaid
 mindmap
   root((DBMS Core))
-    ClientInterface
-    QueryProcessing
-    DatabaseManagement
     StorageEngine
+    QueryProcessing
     TransactionConcurrency
-    SecurityManagement
-    BackupRecoveryLogging
+    Security
+    DatabaseObjectMetadata
     Administration
-    PerformanceManagement
+    BackupRecoveryLogging
     CommunicationConnectivity
 ```
 
@@ -31,34 +29,29 @@ classDiagram
         <<Facade / Orchestrator>>
     }
 
-    DBMS *-- ClientInterface
+    DBMS *-- CommunicationConnectivity
     DBMS *-- QueryProcessing
-    DBMS *-- DatabaseManagement
+    DBMS *-- DatabaseObjectMetadata
     DBMS *-- StorageEngine
     DBMS *-- TransactionConcurrency
-    DBMS *-- SecurityManagement
+    DBMS *-- Security
     DBMS *-- Administration
     DBMS *-- BackupRecoveryLogging
-    DBMS *-- PerformanceManagement
-    DBMS *-- CommunicationConnectivity
     
-    ClientInterface --> QueryProcessing
-    QueryProcessing --> DatabaseManagement
-    QueryProcessing --> StorageEngine
-    QueryProcessing --> TransactionConcurrency
-    QueryProcessing --> SecurityManagement
-    DatabaseManagement --> SystemCatalog
-    DatabaseManagement --> StorageEngine
-    TransactionConcurrency --> StorageEngine
-    TransactionConcurrency --> BackupRecoveryLogging
-    BackupRecoveryLogging --> StorageEngine
-    PerformanceManagement --> QueryProcessing
-    PerformanceManagement --> StorageEngine
-    PerformanceManagement --> TransactionConcurrency
-    Administration --> SecurityManagement
-    Administration --> BackupRecoveryLogging
-    Administration --> PerformanceManagement
-
+    %% Thiết lập sự phụ thuộc (Dependencies)
+    CommunicationConnectivity --> QueryProcessing : Gửi SQL
+    CommunicationConnectivity --> Security : Yêu cầu Authentication
+    QueryProcessing --> DatabaseObjectMetadata : Đọc Catalog
+    QueryProcessing --> StorageEngine : Đọc/Ghi dữ liệu
+    QueryProcessing --> TransactionConcurrency : Lock & Context
+    QueryProcessing --> Security : Check Authorization
+    TransactionConcurrency --> StorageEngine : Khóa bản ghi (Page)
+    TransactionConcurrency --> BackupRecoveryLogging : Ghi WAL
+    BackupRecoveryLogging --> StorageEngine : Restore/Flush
+    Administration --> Security : Audit Log
+    Administration --> BackupRecoveryLogging : Lên lịch Backup
+    Administration --> QueryProcessing : Metrics
+    Administration --> StorageEngine : DBCC, Vacuum
 ```
 
 ---
@@ -71,5 +64,3 @@ classDiagram
 | **ISP** | Fat interfaces split into focused interfaces (e.g., `IFileReader`, `IFileWriter`, `IFileSynchronizer`) |
 | **DIP** | High-level modules depend on abstractions, not concrete implementations |
 | **Design Patterns** | Facade, Template Method, Strategy, Composite, Iterator used per module |
-
----
