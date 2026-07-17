@@ -1,5 +1,5 @@
 # DBMS — Database Management System
-
+...
 A modular, SOLID-compliant Database Management System designed with a top-down architecture approach.
 The system is decomposed into 8 core subsystems, each designed with clear interfaces, entities, and service classes following OOP best practices.
 
